@@ -1,0 +1,29 @@
+{
+  "name": "Unicode Blocks",
+  "short_name": "Unicode Blocks",
+  "icons": [{
+    "src": "assets/touch-icon.x128.png",
+    "sizes": "128x128",
+    "type": "image/png"
+  }, {
+    "src": "assets/touch-icon.x144.png",
+    "sizes": "144x144",
+    "type": "image/png"
+  }, {
+    "src": "assets/touch-icon.x152.png",
+    "sizes": "152x152",
+    "type": "image/png"
+  }, {
+    "src": "assets/touch-icon.x192.png",
+    "sizes": "192x192",
+    "type": "image/png"
+  }, {
+    "src": "assets/touch-icon.x256.png",
+    "sizes": "256x256",
+    "type": "image/png"
+  }],
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#cc4848",
+  "theme-color": "#3d2594"
+}

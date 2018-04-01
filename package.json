@@ -1,0 +1,10 @@
+{
+  "name": "unicode-blocks",
+  "version": "0.0.1",
+  "description": "Provides unicode scoping blocks",
+  "main": "index.html",
+  "repository": "https://github.com/Kurosnape/Unicode-Blocks",
+  "author": "Kurosnape",
+  "license": "GPL",
+  "private": true
+}
