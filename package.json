@@ -4,6 +4,10 @@
   "description": "Provides unicode scoping blocks",
   "main": "index.html",
   "repository": "https://github.com/Kurosnape/Unicode-Blocks",
+  "script": {
+    "start": "npm run deploy-to-gh-pages",
+    "deploy-to-gh-pages": "git checkout gh-pages && git merge master && git push origin gh-pages"
+  },
   "author": "Kurosnape",
   "license": "GPL",
   "private": true
