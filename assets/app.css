@@ -1,3 +1,8 @@
+::selection {
+  background: #3d2594;
+  color: #f5f6f7;
+}
+
 body {
   color: #565a5f;
   background: #f5f6f7;
@@ -5,6 +10,15 @@ body {
 
 #main {
   margin-top: 40px;
+}
+
+.header-title a {
+  color: #565a5f;
+}
+
+.header-title a:hover {
+  color: #565a5f;
+  text-decoration: none;
 }
 
 .input-group-prepend,
@@ -127,9 +141,18 @@ body {
 
 .unicode-box {
   float: left;
-  width: 60px;
   text-align: center;
-  padding: 1em 0;
+  padding: 2vh 0 4vh;
+}
+
+.unicode-box a {
+  color: #565a5f;
+  transition: 0.25s color cubic-bezier(0, 0, 0.2, 1)
+}
+
+.unicode-box a:hover {
+  color: #007bff;
+  text-decoration: none;
 }
 
 .unicode-box span {

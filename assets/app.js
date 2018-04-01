@@ -1,12 +1,11 @@
 'use strict';
-var t;
 $(function() {
   $.event.trigger( 'page-loaded' )
-  t = new initialization()
+  new initialization()
 })
 
 $( document ).on( 'page-loaded table-loaded', () => {
-  $('.loading-wrap').delay(800).fadeOut(800)
+  $('.loading-wrap').delay(400).fadeOut(800)
 })
 
 function initialization() {
@@ -85,7 +84,7 @@ initialization.prototype.drawTable = function() {
   this.redefineRange()
 
   // 테이블을 애니메이션과 함께 초기화합니다.
-  if (this.onceInit) {
+  if (this.onceInit ? false : false) {
     // off 함수를 넣어 이벤트가 1회 이상 중복되었을 때 애니메이션이 겹쳐 유니코드 테이블이 표시되지 않는 문제를 해결합니다.
     this.$el.off().fadeOut(400, function() {
       $(this).html('').fadeIn(420)
@@ -97,22 +96,24 @@ initialization.prototype.drawTable = function() {
     // 반복문에 사용할 변수를 정의합니다.
     var start = this.$point.temp.start,
         end = this.$point.temp.end,
-        length = end - start + 1;
+        length = end - start + 1, results = ''
 
     // 16비트 유니코드인지 검사합니다.
     if (start >= 0 && start <= 0xD7FF || start >= 0xE000 && start <= 0xFFFF) {
       for (var i = 0; i < length; i++) {
-        this.printChar(parseInt(start) + i)
+        results += this.printChar(parseInt(start) + i)
       }
     } else if (start >= 0x10000 && start <= 0x10FFFF) {
       for (var i = 0; i < length; i++) {
         var first = Math.floor((parseInt(start) + i - 0x10000) / 0x400 + 0xD800),
             second = (parseInt(start) + i - 0x10000) % 0x400 + 0xDC00;
         
-        this.printChar(first, second, parseInt(start) + i)
+        results += this.printChar(first, second, parseInt(start) + i)
       }
     }
-  }, this), 420)
+
+    this.$el.html(results)
+  }, this), 0)
 }
 
 initialization.prototype.printChar = function(start, second = false, origin = false) {
@@ -122,15 +123,15 @@ initialization.prototype.printChar = function(start, second = false, origin = fa
   origin = origin.toString(16).toUpperCase()
 
   var result = '';
-  result += '<div class="unicode-box">'
+  result += '<div class="unicode-box col-2 col-md-1 col-lg-1"><a href="#">'
     result += '<span>'
       result += String.fromCharCode(start) + ( second ? String.fromCharCode((parseInt(second))) : '')
     result += '</span>'
     result += '<tt>'
       result += origin.length >= 5 ? String("00000" + origin).slice(-5) : String("0000" + origin).slice(-4)
     result += '</tt>'
-  result += '</div>'
-  this.$el.append( result )
+  result += '<a/></div>'
+  return result
 }
 
 initialization.prototype.bindEvents = function() {
@@ -154,14 +155,14 @@ initialization.prototype.bindEvents = function() {
     this.$point.useRange = true
     this.drawTable()
   }, this))
-}
-
-
-initialization.prototype.readjustValue = function(value) {
-  // 16비트 유니코드는 올바른 값을 얻기 위해 값을 재조정할 필요가 있습니다.
-  value -= 0x10000;
-
-  return value
+  $(document).on('click', '.unicode-box', function(e) {
+    var $temp = $("<input>");
+    $("body").append($temp);
+    $temp.val($(this).find('span').text()).select();
+    document.execCommand("copy");
+    $temp.remove();
+    e.preventDefault()
+  })
 }
 
 // TODO
