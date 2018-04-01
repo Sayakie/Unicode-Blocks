@@ -98,10 +98,12 @@
     <meta itemprop="accessbilityAPI" content="ARIA">
     <main id="main">
       <header>
-        <div class="loading">
-          <div class="spinner">
-            <div class="dot-front"></div>
-            <div class="dot-end"></div>
+        <div class="loading-wrap">
+          <div class="loading-container">
+            <div class="spinner">
+              <div class="dot-front"></div>
+              <div class="dot-end"></div>
+            </div>
           </div>
         </div>
       </header>
@@ -109,10 +111,13 @@
         <div class="container">
           <div class="row">
             <div class="col-12 mb-3"><h1>Unicode Blocks</h1></div>
-            <div class="col-md-7 offset-md-5 col-lg-6 offset-lg-6">
+            <div class="col-md-7 offset-md-5 col-lg-6 offset-lg-6 mb-2">
               <div class="input-group input-group-sm">
-                <input type="text" id="rangeStart" class="form-control col-2" disabled aria-label="유니코드 범위를 시작할 지점을 입력하세요.">
-                <input type="text" id="rangeEnd" class="form-control col-2" disabled aria-label="유니코드 범위를 끝맺을 지점을 입력하세요.">
+                <input type="text" id="rangeStart" class="form-control col-2" aria-label="유니코드 범위를 시작할 지점을 입력하세요.">
+                <div class="input-group-append">
+                  <span class="input-group-text range-label">-</span>
+                </div>
+                <input type="text" id="rangeEnd" class="form-control col-2" aria-label="유니코드 범위를 끝맺을 지점을 입력하세요.">
                 <div class="input-group-append">
                   <span class="input-group-text">또는</span>
                 </div>
@@ -242,6 +247,7 @@
                 </select>
               </div>
             </div>
+            <div class="col-12"><p class="text-right"><small>※ 값을 직접 입력해 엔터 키를 누르거나 미리 설정된 범위 내를 선택해 검색할 수 있습니다.</small></p></div>
           </div>
           <div class="row">
             <section id="unicodeTable"></section>
@@ -249,10 +255,10 @@
         </div>
       </section>
       <footer>
-        <div class="container">
-          <div class="row">
+        <div id="footer" class="container-fluld">
+          <div class="container">
             <div id="discussion" itemscope itemtype="https://schema.org/discussionUrl">
-              <p><a href="https://github.com/Kurosnape/Unicode-Blocks/issues" target="_blank">오류 제보 또는 건의하기</a></p>
+              <a href="https://github.com/Kurosnape/Unicode-Blocks/issues" target="_blank">오류 제보 또는 건의하기</a>
             </div>
           </div>
         </div>

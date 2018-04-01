@@ -6,7 +6,7 @@ $(function() {
 })
 
 $( document ).on( 'page-loaded table-loaded', () => {
-  $('.loading').fadeOut(1200)
+  $('.loading-wrap').delay(800).fadeOut(800)
 })
 
 function initialization() {
@@ -86,72 +86,44 @@ initialization.prototype.drawTable = function() {
 
   // 테이블을 애니메이션과 함께 초기화합니다.
   if (this.onceInit) {
-    this.$el.fadeOut(400).stop(true, true).html('').fadeIn(500)
+    // off 함수를 넣어 이벤트가 1회 이상 중복되었을 때 애니메이션이 겹쳐 유니코드 테이블이 표시되지 않는 문제를 해결합니다.
+    this.$el.off().fadeOut(400, function() {
+      $(this).html('').fadeIn(420)
+    })
   }
 
-  // 반복문에 사용할 변수를 정의합니다.
-  var start = this.$point.temp.start,
-      end = this.$point.temp.end,
-      length = end - start + 1;
+  // 페이드-아웃 페이드-인 효과 도중 테이블이 바로 사라지는 문제를 막기 위해 setTimeout으로 딜레이를 줍니다.
+  setTimeout($.proxy(function() {
+    // 반복문에 사용할 변수를 정의합니다.
+    var start = this.$point.temp.start,
+        end = this.$point.temp.end,
+        length = end - start + 1;
 
-  // 16비트 유니코드인지 검사합니다.
-  if (start >= 0 && start <= 0xD7FF || start >= 0xE000 && start <= 0xFFFF) {
-    for (var i = 0; i < length; i++) {
-      this.printChar(parseInt(start) + i)
+    // 16비트 유니코드인지 검사합니다.
+    if (start >= 0 && start <= 0xD7FF || start >= 0xE000 && start <= 0xFFFF) {
+      for (var i = 0; i < length; i++) {
+        this.printChar(parseInt(start) + i)
+      }
+    } else if (start >= 0x10000 && start <= 0x10FFFF) {
+      for (var i = 0; i < length; i++) {
+        var first = Math.floor((parseInt(start) + i - 0x10000) / 0x400 + 0xD800),
+            second = (parseInt(start) + i - 0x10000) % 0x400 + 0xDC00;
+        
+        this.printChar(first, second, parseInt(start) + i)
+      }
     }
-  } else if (start >= 0x10000 && start <= 0x10FFFF) {
-    for (var i = 0; i < length; i++) {
-      //start -= 0x10000;
-      /*var first = ((0xffc00 & start) >> 10) + 0xD800,
-          second = (0x3ff & start) + 0xDC00;*/
-      var first = Math.floor((parseInt(start) + i - 0x10000) / 0x400 + 0xD800),
-          second = (parseInt(start) + i - 0x10000) % 0x400 + 0xDC00;
-      
-      this.printChar(first, second, parseInt(start) + i)
-    }
-  }/*
-    start -= 0x10000;
-
-    var first = ((0xffc00 & start) >> 10) + 0xD800,
-        second = (0x3ff & start) + 0xDC00
-        this.$el.append( String.fromCharCode(first) + String.fromCharCode(second) )
-  }
-  /*
-  var start = this.$point.temp.start,
-      end = this.$point.temp.end,
-      length = end - start + 1;
-
-  for (var i = 0; i < length; i++) {
-    var char = String.fromCharCode( (parseInt(start) + i), 16 ).slice(0, 1),
-        unicode = (parseInt(start) + i).toString(16).toUpperCase(),
-        result = ''; var final = unicode.length >= 5 ? String("00000" + unicode).slice(-5) : String("0000" + unicode).slice(-4)
-
-    result += '<div class="unicode-box">'
-      result += '<span>'
-        result += char
-      result += '</span>'
-      result += '<tt>'
-        result += JSON.parse(`["\\u${final}"]`)[0].slice(0, 1)
-      result += '</tt>'
-      result += '<td>'
-        result += unicode.length >= 5 ? String("00000" + unicode).slice(-5) : String("0000" + unicode).slice(-4)
-      result += '</td>'
-    result += '</div>'
-    this.$el.append( result )
-  }
-  */
+  }, this), 420)
 }
 
 initialization.prototype.printChar = function(start, second = false, origin = false) {
-  var result = '';
   if (!origin) {
     origin = start
   }
   origin = origin.toString(16).toUpperCase()
 
+  var result = '';
   result += '<div class="unicode-box">'
     result += '<span>'
-      //result += String.fromCharCode((parseInt(start) + i)) + ( second ? String.fromCharCode((parseInt(second) + i)) : '')
       result += String.fromCharCode(start) + ( second ? String.fromCharCode((parseInt(second))) : '')
     result += '</span>'
     result += '<tt>'
@@ -162,13 +134,24 @@ initialization.prototype.printChar = function(start, second = false, origin = fa
 }
 
 initialization.prototype.bindEvents = function() {
-  this.$point.start.on('input', $.proxy(function() {
-    this.drawTable()
+  this.$point.start.on('keydown', $.proxy(function(e) {
+    var key = (e.keyCode ? e.keyCode : e.which)
+    if (key == 13) {
+      this.$point.useRange = false
+      this.drawTable()
+      e.preventDefault()
+    }
   }, this))
-  this.$point.end.on('input', $.proxy(function() {
-    this.drawTable()
+  this.$point.end.on('keydown', $.proxy(function(e) {
+    var key = (e.keyCode ? e.keyCode : e.which)
+    if (key == 13) {
+      this.$point.useRange = false
+      this.drawTable()
+      e.preventDefault()
+    }
   }, this))
   this.$point.selection.on('change', $.proxy(function() {
+    this.$point.useRange = true
     this.drawTable()
   }, this))
 }
@@ -184,3 +167,4 @@ initialization.prototype.readjustValue = function(value) {
 // TODO
 //
 // 여러 유니코드 범위를 입력하고 그 범위들을 출력할 수 있도록 수정**
+// 문자열 클릭시 Copy하기
