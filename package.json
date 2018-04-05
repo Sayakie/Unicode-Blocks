@@ -4,11 +4,18 @@
   "description": "Provides unicode scoping blocks",
   "main": "index.html",
   "repository": "https://github.com/Kurosnape/Unicode-Blocks",
-  "script": {
+  "scripts": {
     "start": "npm run deploy-to-gh-pages",
-    "deploy-to-gh-pages": "git checkout gh-pages && git merge master && git push origin gh-pages"
+    "deploy-to-gh-pages": "git checkout gh-pages && git merge master && git push origin gh-pages",
+    "test": "mocha --require babel-register",
+    "build": "babel ./src -d ./assets",
+    "build-watch": "babel ./src -d ./assets -w"
   },
   "author": "Kurosnape",
   "license": "GPL",
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.1"
+  }
 }

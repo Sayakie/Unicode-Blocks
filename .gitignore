@@ -1,0 +1,8 @@
+old
+assets
+
+# Modules
+node_modules
+
+# Yarn Error
+yarn-error.log
