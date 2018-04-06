@@ -4,8 +4,9 @@ export class app {
     this.loadVariables()
     this.confirmSupport()
     if (this.supportWorker) {
-      
+      this.$worker = new Worker(URL.createObjectURL(new Blob([ this.loadWorker() ])))
     }
+    this.bindEvents()
     this.onceInit = true
     $.event.trigger( 'app-loaded' )
   }
@@ -45,6 +46,7 @@ export class app {
     this.$ranges.end = null
     this.$ranges.temp.start = null
     this.$ranges.temp.end = null
+    this.$worker = null
   }
 
   loadVariables() {
@@ -64,5 +66,14 @@ export class app {
     typeof Worker !== void(0)
       ? this.supportWorker = true
       : this.supportWorker = false
+  }
+
+  loadWorker() {
+    postMessage( ' I AM Worker ' )
+    self.close()
+  }
+
+  bindEvents() {
+    this.$worker.onmessage = (event) => console.log(event.data)
   }
 }
