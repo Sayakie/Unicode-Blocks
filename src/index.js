@@ -13,7 +13,7 @@ $( document ).on('page-loaded app-loaded', () => {
 import { app } from 'app'
 app.options = {
   version: '0.1.0-beta.0',
-  build: 31
+  build: 32
 }
 
 new app()

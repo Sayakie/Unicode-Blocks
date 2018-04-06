@@ -1,5 +1,5 @@
 export class app {
-  constructor() {
+  constructor(options) {
     this.initVariables()
     this.loadVariables()
     this.confirmSupport()
@@ -7,6 +7,7 @@ export class app {
       this.$worker = new Worker(URL.createObjectURL(new Blob([ this.loadWorker() ])))
     }
     this.bindEvents()
+    this.mergeOptions(options)
     this.onceInit = true
     $.event.trigger( 'app-loaded' )
   }
@@ -73,6 +74,13 @@ export class app {
     self.close()
   }
 
+  sliceBlock() {
+    const val = this.$selector.find(':selected').val().split('-')
+
+    this.$ranges.start.val( val[0] )
+    this.$ranges.end.val( val[1] )
+  }
+
   bindEvents() {
     this.$worker.onmessage = (event) => console.log(event.data)
     this.$ranges.start.bind('keydown', $.proxy(event => {
@@ -103,5 +111,10 @@ export class app {
     $( document ).bind('click', '#canvas', event => {
       event.preventDefault()
     })
+  }
+
+  mergeOptions(options) {
+    version(options.version)
+    build(options.build)
   }
 }
