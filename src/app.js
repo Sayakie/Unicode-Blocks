@@ -75,5 +75,33 @@ export class app {
 
   bindEvents() {
     this.$worker.onmessage = (event) => console.log(event.data)
+    this.$ranges.start.bind('keydown', $.proxy(event => {
+      let key = event.keyCode ? event.keyCode : event.which
+
+      switch (key) {
+        case 13:
+          // Keydown detect - Enter
+          this.useBlock = true
+          event.preventDefault()
+          break
+      }
+    }, this))
+    this.$ranges.end.bind('keydown', $.proxy(event => {
+      let key = event.keyCode ? event.keyCode : event.which
+
+      switch (key) {
+        case 13:
+          // Keydown detect - Enter
+          this.useBlock = true
+          event.preventDefault()
+          break
+      }
+    }, this))
+    this.$selector.bind('change', $.proxy(() => {
+      this.useBlock = true
+    }, this))
+    $( document ).bind('click', '#canvas', event => {
+      event.preventDefault()
+    })
   }
 }
