@@ -5,7 +5,11 @@ export class app {
     this.confirmSupport()
     if (this.supportWorker) {
       this.$worker = new Worker(URL.createObjectURL(new Blob([ this.loadWorker() ])))
+    } else {
+      // Worker does not support
+      this.sendMessage(`Worker does not support`)
     }
+    // this.$worker.postMessage()
     this.bindEvents()
     this.mergeOptions(options)
     this.onceInit = true
@@ -70,8 +74,15 @@ export class app {
   }
 
   loadWorker() {
-    postMessage( ' I AM Worker ' )
+    self.onMessage = (event) => {
+      const data = event.data
+    }
     self.close()
+  }
+
+  defineRange() {
+    this.$point.temp.start = '0x' + this.$point.start.val()
+    this.$point.temp.end = '0x' + this.$point.end.val()
   }
 
   sliceBlock() {
@@ -79,6 +90,10 @@ export class app {
 
     this.$ranges.start.val( val[0] )
     this.$ranges.end.val( val[1] )
+  }
+
+  sendMessage(msg, type = 'default') {
+    console.log(msg)
   }
 
   bindEvents() {
